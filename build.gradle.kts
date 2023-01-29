@@ -1,0 +1,60 @@
+val ktor_version: String by project
+val kotlin_version: String by project
+val koin_version: String by project
+val logback_version: String by project
+val kotlin_acl_version: String by project
+val kmongo_version: String by project
+val kotest_version: String by project
+val strikt_version: String by project
+val kotlin_datetime_version: String by project
+val kotlin_logging_version: String by project
+val logstash_logback_encoder_version: String by project
+
+plugins {
+    kotlin("jvm") version "1.8.0"
+    id("org.jetbrains.kotlin.plugin.serialization") version "1.8.0"
+}
+
+allprojects {
+    group = "com.szastarek"
+    version = "0.0.1"
+    repositories {
+        mavenCentral()
+        maven("https://maven.pkg.github.com/arkadiuszSzast/kotlin-acl-kotlinx-serializer") {
+            credentials {
+                username = System.getenv("GITHUB_ACTOR")
+                password = System.getenv("GITHUB_TOKEN")
+            }
+        }
+    }
+
+    apply(plugin = "kotlin")
+}
+
+subprojects {
+    apply(plugin = "org.jetbrains.kotlin.plugin.serialization")
+    apply(plugin = "org.gradle.java-test-fixtures")
+
+    dependencies {
+        implementation("io.ktor:ktor-server-auth-jvm:$ktor_version")
+        implementation("io.ktor:ktor-server-content-negotiation-jvm:$ktor_version")
+        implementation("io.ktor:ktor-serialization-kotlinx-json-jvm:$ktor_version")
+        implementation("ch.qos.logback:logback-classic:$logback_version")
+        implementation("org.jetbrains.kotlinx:kotlinx-datetime:$kotlin_datetime_version")
+        implementation("io.github.microutils:kotlin-logging-jvm:$kotlin_logging_version")
+        implementation("io.insert-koin:koin-ktor:$koin_version")
+
+        implementation("com.szastarek:kotlin-acl-kotlinx-serialization:${kotlin_acl_version}")
+        implementation("org.litote.kmongo:kmongo-coroutine-serialization:${kmongo_version}")
+
+        testImplementation("io.ktor:ktor-server-tests-jvm:$ktor_version")
+        testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
+        testImplementation("io.kotest:kotest-runner-junit5:$kotest_version")
+        testImplementation("io.strikt:strikt-core:$strikt_version")
+        testImplementation("io.insert-koin:koin-test:$koin_version")
+    }
+
+    kotlin.target.compilations["test"].associateWith(kotlin.target.compilations["main"])
+    kotlin.target.compilations["testFixtures"].associateWith(kotlin.target.compilations["main"])
+}
+
