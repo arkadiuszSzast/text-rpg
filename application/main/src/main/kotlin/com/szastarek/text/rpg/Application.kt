@@ -2,6 +2,7 @@ package com.szastarek.text.rpg
 
 import com.szastarek.text.rpg.plugins.configureKoin
 import io.ktor.server.application.Application
+import org.koin.ktor.ext.get
 
 fun main(args: Array<String>) =
     io.ktor.server.netty.EngineMain.main(args)
@@ -10,6 +11,6 @@ fun main(args: Array<String>) =
 fun Application.main() {
     configureKoin()
     configureSecurity()
-    configureSerialization()
+    configureSerialization(get())
     configureRouting()
 }
