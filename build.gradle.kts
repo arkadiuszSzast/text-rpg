@@ -9,6 +9,7 @@ val strikt_version: String by project
 val kotlin_datetime_version: String by project
 val kotlin_logging_version: String by project
 val logstash_logback_encoder_version: String by project
+val codified_version: String by project
 
 plugins {
     kotlin("jvm") version "1.8.0"
@@ -20,6 +21,7 @@ allprojects {
     version = "0.0.1"
     repositories {
         mavenCentral()
+        maven { url = uri("https://jitpack.io") }
         maven("https://maven.pkg.github.com/arkadiuszSzast/kotlin-acl-kotlinx-serializer") {
             credentials {
                 username = System.getenv("GITHUB_ACTOR")
@@ -43,7 +45,8 @@ subprojects {
         implementation("org.jetbrains.kotlinx:kotlinx-datetime:$kotlin_datetime_version")
         implementation("io.github.microutils:kotlin-logging-jvm:$kotlin_logging_version")
         implementation("io.insert-koin:koin-ktor:$koin_version")
-
+        implementation("com.github.bright.codified:enums:$codified_version")
+        implementation("com.github.bright.codified:enums-serializer:$codified_version")
         implementation("com.szastarek:kotlin-acl-kotlinx-serialization:${kotlin_acl_version}")
         implementation("org.litote.kmongo:kmongo-coroutine-serialization:${kmongo_version}")
 
