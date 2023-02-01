@@ -1,7 +1,5 @@
-package com.psinder.shared.config
+package com.szastarek.text.rpg.shared.config
 
-import com.szastarek.text.rpg.shared.config.ConfigKey
-import com.szastarek.text.rpg.shared.config.getProperty
 import io.kotest.core.spec.style.DescribeSpec
 import io.ktor.server.config.ApplicationConfigurationException
 import strikt.api.expectThat

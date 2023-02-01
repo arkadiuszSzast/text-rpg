@@ -1,6 +1,5 @@
-package com.psinder.shared.config
+package com.szastarek.text.rpg.shared.config
 
-import com.szastarek.text.rpg.shared.config.ApplicationConfig
 import io.kotest.core.spec.style.DescribeSpec
 import strikt.api.expectThat
 import strikt.assertions.isEqualTo

@@ -10,6 +10,9 @@ val kotlin_datetime_version: String by project
 val kotlin_logging_version: String by project
 val logstash_logback_encoder_version: String by project
 val codified_version: String by project
+val arrow_version: String by project
+val konform_version: String by project
+val jbcrypt_version: String by project
 
 plugins {
     kotlin("jvm") version "1.8.0"
@@ -49,12 +52,18 @@ subprojects {
         implementation("com.github.bright.codified:enums-serializer:$codified_version")
         implementation("com.szastarek:kotlin-acl-kotlinx-serialization:${kotlin_acl_version}")
         implementation("org.litote.kmongo:kmongo-coroutine-serialization:${kmongo_version}")
+        implementation("io.arrow-kt:arrow-core")
+        implementation("io.konform:konform-jvm:$konform_version")
+        implementation("org.mindrot:jbcrypt:$jbcrypt_version")
 
         testImplementation("io.ktor:ktor-server-tests-jvm:$ktor_version")
         testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
         testImplementation("io.kotest:kotest-runner-junit5:$kotest_version")
         testImplementation("io.strikt:strikt-core:$strikt_version")
+        testImplementation("io.strikt:strikt-arrow:$strikt_version")
         testImplementation("io.insert-koin:koin-test:$koin_version")
+
+        implementation(platform("io.arrow-kt:arrow-stack:$arrow_version"))
     }
 
     kotlin.target.compilations["test"].associateWith(kotlin.target.compilations["main"])
