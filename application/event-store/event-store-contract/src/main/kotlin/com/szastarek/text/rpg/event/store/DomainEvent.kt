@@ -1,7 +1,9 @@
 package com.szastarek.text.rpg.event.store
 
-import org.litote.kmongo.Id
+import com.szastarek.event.store.db.EventCategory
+import com.szastarek.event.store.db.EventType
 import java.util.UUID
+import org.litote.kmongo.Id
 
 interface DomainEvent {
 

@@ -1,5 +1,6 @@
 package com.szastarek.text.rpg.plugins
 
+import com.szastarek.text.rpg.account.adapter.koinAccountModule
 import com.szastarek.text.rpg.event.store.plugins.eventStoreDbKoinModule
 import com.szastarek.text.rpg.json.jsonModule
 import com.szastarek.text.rpg.kediatrModule
@@ -13,7 +14,8 @@ internal fun Application.configureKoin() {
             jsonModule,
             mongoModule,
             kediatrModule,
-            eventStoreDbKoinModule
+            eventStoreDbKoinModule,
+            koinAccountModule
         )
     }
 }

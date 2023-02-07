@@ -1,3 +1,9 @@
 package com.szastarek.text.rpg.account.responses
 
-data class CreateAccountResponse(val accountId: String)
+import com.szastarek.text.rpg.account.Account
+import kotlinx.serialization.Contextual
+import kotlinx.serialization.Serializable
+import org.litote.kmongo.Id
+
+@Serializable
+data class CreateAccountResponse(@Contextual val accountId: Id<Account>)

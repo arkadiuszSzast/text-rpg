@@ -5,6 +5,6 @@ import org.koin.dsl.module
 
 val kediatrModule = module {
     single { KediatrKoin.getCommandBus() }
-    single { ProcessingPipelineBehavior(get()) }
-    single { AsyncProcessingPipelineBehavior(get()) }
+    single { ProcessingPipelineBehavior(emptyList()) }
+    single { AsyncProcessingPipelineBehavior(emptyList()) }
 }

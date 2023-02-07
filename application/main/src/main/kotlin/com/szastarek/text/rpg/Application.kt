@@ -1,5 +1,6 @@
 package com.szastarek.text.rpg
 
+import com.szastarek.text.rpg.plugins.configureExceptionsHandling
 import com.szastarek.text.rpg.plugins.configureKoin
 import io.ktor.server.application.Application
 import org.koin.ktor.ext.get
@@ -13,4 +14,5 @@ fun Application.main() {
     configureSecurity()
     configureSerialization(get())
     configureRouting()
+    configureExceptionsHandling()
 }
