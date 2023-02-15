@@ -1,12 +1,8 @@
-val event_store_db_version: String by project
-val kmongo_version: String by project
 val test_containers_version: String by project
 val koin_version: String by project
 val kotest_version: String by project
 
 dependencies {
-    api("com.github.arkadiuszSzast:ktor-event-store-db:$event_store_db_version")
-
     api(project(":application:event-store:event-store-contract"))
     implementation(project(":application:mediator"))
     implementation(project(":application:shared"))

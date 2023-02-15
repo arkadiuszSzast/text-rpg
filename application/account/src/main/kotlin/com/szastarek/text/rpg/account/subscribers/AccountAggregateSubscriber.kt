@@ -6,14 +6,14 @@ import com.szastarek.text.rpg.account.events.accountEventCategory
 import io.ktor.server.application.Application
 import kotlinx.coroutines.launch
 
-internal fun Application.accountProjectionUpdater(
+internal fun Application.accountAggregateUpdater(
     eventStoreDb: EventStoreDB,
-    accountProjectionUpdater: AccountProjectionUpdater
+    accountAggregateUpdater: AccountAggregateUpdater
 ) = launch {
     eventStoreDb.subscribePersistentByEventCategory(
         accountEventCategory,
-        CustomerGroup("account-projection-updater")
+        CustomerGroup("account-aggregate-updater")
     ) { _, event ->
-        accountProjectionUpdater.update(event.event)
+        accountAggregateUpdater.update(event.event)
     }
 }

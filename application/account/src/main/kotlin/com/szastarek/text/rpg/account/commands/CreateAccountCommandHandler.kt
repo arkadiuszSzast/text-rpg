@@ -1,10 +1,8 @@
 package com.szastarek.text.rpg.account.commands
 
-import arrow.core.nel
 import com.szastarek.event.store.db.EventStoreDB
 import com.szastarek.text.rpg.account.AccountAggregate
-import com.szastarek.text.rpg.account.AccountProjectionRepository
-import com.szastarek.text.rpg.event.store.EventMetadata
+import com.szastarek.text.rpg.account.AccountAggregateRepository
 import com.szastarek.text.rpg.event.store.appendToStream
 import com.szastarek.text.rpg.shared.validation.ValidationError
 import com.szastarek.text.rpg.shared.validation.ValidationException
@@ -12,7 +10,7 @@ import com.trendyol.kediatr.AsyncCommandWithResultHandler
 import mu.KotlinLogging
 
 internal class CreateAccountCommandHandler(
-    private val accountProjectionRepository: AccountProjectionRepository,
+    private val accountAggregateRepository: AccountAggregateRepository,
     private val eventStore: EventStoreDB,
     ) : AsyncCommandWithResultHandler<CreateAccountCommand, CreateAccountCommandResult> {
     private val logger = KotlinLogging.logger {}
@@ -20,7 +18,7 @@ internal class CreateAccountCommandHandler(
     override suspend fun handleAsync(command: CreateAccountCommand): CreateAccountCommandResult {
         logger.debug { "Starting creating account" }
         val (emailAddress, password, timeZone, metadata) = command
-        val isEmailTaken = accountProjectionRepository.existsByEmail(emailAddress)
+        val isEmailTaken = accountAggregateRepository.existsByEmail(emailAddress)
 
         if (isEmailTaken) {
             logger.warn { "Email address already taken: $emailAddress" }
@@ -32,7 +30,7 @@ internal class CreateAccountCommandHandler(
             )
         }
 
-        val event = AccountAggregate.create(emailAddress, password.hashpw(), timeZone)
+        val event = AccountAggregate.createRegularUser(emailAddress, password.hashpw(), timeZone)
         logger.debug { "Account created. Sending event: $event" }
         eventStore.appendToStream(event, metadata)
 

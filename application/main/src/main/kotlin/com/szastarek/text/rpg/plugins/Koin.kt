@@ -5,6 +5,7 @@ import com.szastarek.text.rpg.event.store.plugins.eventStoreDbKoinModule
 import com.szastarek.text.rpg.json.jsonModule
 import com.szastarek.text.rpg.kediatrModule
 import com.szastarek.text.rpg.mongoModule
+import com.szastarek.text.rpg.security.adapter.koinSecurityModule
 import io.ktor.server.application.Application
 import org.koin.ktor.plugin.koin
 
@@ -15,7 +16,8 @@ internal fun Application.configureKoin() {
             mongoModule,
             kediatrModule,
             eventStoreDbKoinModule,
-            koinAccountModule
+            koinAccountModule,
+            koinSecurityModule
         )
     }
 }

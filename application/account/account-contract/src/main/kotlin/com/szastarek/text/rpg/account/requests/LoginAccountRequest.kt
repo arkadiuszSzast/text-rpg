@@ -11,7 +11,7 @@ data class LoginAccountRequest(val email: EmailAddress, val password: RawPasswor
     Validatable<LoginAccountRequest> {
 
     companion object {
-        val validator = Validation<LoginAccountRequest> {
+        val validator = Validation {
             LoginAccountRequest::email {
                 run(EmailAddress.validator)
             }

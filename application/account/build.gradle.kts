@@ -3,4 +3,5 @@ dependencies {
     implementation(project(":application:shared"))
     implementation(project(":application:mediator"))
     implementation(project(":application:event-store"))
+    implementation(project(":application:security"))
 }

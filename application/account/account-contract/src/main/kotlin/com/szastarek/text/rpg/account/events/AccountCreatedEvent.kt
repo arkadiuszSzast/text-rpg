@@ -1,9 +1,11 @@
 package com.szastarek.text.rpg.account.events
 
+import com.szastarek.acl.authority.Authority
 import com.szastarek.event.store.db.EventCategory
 import com.szastarek.event.store.db.EventType
 import com.szastarek.text.rpg.account.Account
 import com.szastarek.text.rpg.event.store.DomainEvent
+import com.szastarek.text.rpg.security.RoleName
 import com.szastarek.text.rpg.shared.EmailAddress
 import com.szastarek.text.rpg.shared.UUIDSerializer
 import com.szastarek.text.rpg.shared.date.CreatedDate
@@ -20,6 +22,8 @@ data class AccountCreatedEvent(
     @Contextual val accountId: Id<Account>,
     val emailAddress: EmailAddress,
     val hashedPassword: HashedPassword,
+    val roleName: RoleName,
+    val customAuthorities: List<Authority>,
     val timeZone: TimeZone,
     val createdAt: CreatedDate,
 ) : DomainEvent {
