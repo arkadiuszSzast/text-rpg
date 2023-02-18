@@ -1,11 +1,10 @@
 package com.szastarek.text.rpg.account
 
-import com.szastarek.acl.authority.AllFeaturesAuthority
 import com.szastarek.acl.authority.Authority
-import com.szastarek.text.rpg.account.events.AccountCreatedEvent
-import com.szastarek.text.rpg.account.events.AccountLoggedInEvent
-import com.szastarek.text.rpg.account.events.AccountLoggedInFailureEvent
-import com.szastarek.text.rpg.account.events.AccountLoggedInSuccessEvent
+import com.szastarek.text.rpg.account.event.AccountCreatedEvent
+import com.szastarek.text.rpg.account.event.AccountLoggedInEvent
+import com.szastarek.text.rpg.account.event.AccountLoggedInFailureEvent
+import com.szastarek.text.rpg.account.event.AccountLoggedInSuccessEvent
 import com.szastarek.text.rpg.security.RoleName
 import com.szastarek.text.rpg.security.RoleNames
 import com.szastarek.text.rpg.shared.EmailAddress

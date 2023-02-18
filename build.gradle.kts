@@ -17,6 +17,7 @@ val auth0_jwt_version: String by project
 val event_store_db_version: String by project
 val kediatr_version: String by project
 val mongock_version: String by project
+val awaitility_version: String by project
 
 plugins {
     kotlin("jvm") version "1.8.0"
@@ -78,6 +79,7 @@ subprojects {
         testImplementation("io.strikt:strikt-core:$strikt_version")
         testImplementation("io.strikt:strikt-arrow:$strikt_version")
         testImplementation("io.insert-koin:koin-test:$koin_version")
+        testImplementation("org.awaitility:awaitility-kotlin:$awaitility_version")
 
         implementation(platform("io.arrow-kt:arrow-stack:$arrow_version"))
     }

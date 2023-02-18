@@ -1,12 +1,12 @@
 package com.szastarek.text.rpg.account
 
-import com.szastarek.text.rpg.account.commands.CreateAccountCommand
-import com.szastarek.text.rpg.account.commands.LoginAccountCommand
-import com.szastarek.text.rpg.account.commands.LoginAccountCommandSucceed
-import com.szastarek.text.rpg.account.requests.CreateAccountRequest
-import com.szastarek.text.rpg.account.requests.LoginAccountRequest
-import com.szastarek.text.rpg.account.responses.CreateAccountResponse
-import com.szastarek.text.rpg.account.responses.LoginAccountResponse
+import com.szastarek.text.rpg.account.command.CreateAccountCommand
+import com.szastarek.text.rpg.account.command.LoginAccountCommand
+import com.szastarek.text.rpg.account.command.LoginAccountCommandSucceed
+import com.szastarek.text.rpg.account.request.CreateAccountRequest
+import com.szastarek.text.rpg.account.request.LoginAccountRequest
+import com.szastarek.text.rpg.account.response.CreateAccountResponse
+import com.szastarek.text.rpg.account.response.LoginAccountResponse
 import com.szastarek.text.rpg.shared.validation.validateEagerly
 import com.trendyol.kediatr.CommandBus
 import io.ktor.http.HttpStatusCode

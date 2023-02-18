@@ -11,7 +11,7 @@ import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val eventStoreTestingModule = module {
-    single {
+    factory{
         EventStoreDBClient.create(
             EventStoreDBClientSettings.builder()
                 .addHost(Endpoint(EventStoreContainer.host, EventStoreContainer.port))

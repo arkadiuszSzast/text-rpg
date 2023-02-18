@@ -1,6 +1,6 @@
 package com.szastarek.text.rpg.account
 
-import com.szastarek.text.rpg.account.events.AccountCreatedEvent
+import com.szastarek.text.rpg.account.event.AccountCreatedEvent
 
 fun AccountAggregate.Companion.apply(event: AccountCreatedEvent): AccountAggregate {
     return AccountAggregate(

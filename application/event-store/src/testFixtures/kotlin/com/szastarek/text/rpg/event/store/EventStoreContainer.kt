@@ -10,6 +10,14 @@ object EventStoreContainer {
     val host: String by lazy { instance.host }
     val port: Int by lazy { instance.getMappedPort(EVENT_STORE_DB_PORT) }
 
+    fun restart() {
+        instance.apply {
+            stop()
+            setWaitStrategy(Wait.forListeningPort())
+            start()
+        }
+    }
+
     private fun startEventStoreContainer() = GenericContainer("eventstore/eventstore:20.10.2-buster-slim")
         .apply {
             addExposedPorts(EVENT_STORE_DB_PORT)

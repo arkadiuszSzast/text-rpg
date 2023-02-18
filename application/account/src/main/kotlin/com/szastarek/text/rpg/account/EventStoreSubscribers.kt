@@ -1,6 +1,6 @@
 package com.szastarek.text.rpg.account
 
-import com.szastarek.text.rpg.account.subscribers.accountAggregateUpdater
+import com.szastarek.text.rpg.account.subscriber.accountAggregateUpdater
 import io.ktor.server.application.Application
 import org.koin.ktor.ext.get
 

@@ -15,6 +15,8 @@ import org.litote.kmongo.coroutine.CoroutineDatabase
 
 abstract class DatabaseTest(private val neededModules: List<Module>) : KoinTest, HasDatabaseAndTransactionally,
     DescribeSpec() {
+    constructor(module: Module) : this(listOf(module))
+
     override val transactionally: Transactionally by inject()
     override val db: CoroutineDatabase by inject()
 
