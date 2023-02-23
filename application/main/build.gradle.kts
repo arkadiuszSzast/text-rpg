@@ -13,4 +13,5 @@ dependencies {
     implementation(project(":application:event-store"))
     implementation(project(":application:account"))
     implementation(project(":application:security"))
+    implementation(project(":application:mail"))
 }

@@ -80,6 +80,7 @@ subprojects {
         testImplementation("io.strikt:strikt-arrow:$strikt_version")
         testImplementation("io.insert-koin:koin-test:$koin_version")
         testImplementation("org.awaitility:awaitility-kotlin:$awaitility_version")
+        testImplementation(testFixtures("com.szastarek:kotlin-acl-kotlinx-serialization:${kotlin_acl_version}"))
 
         implementation(platform("io.arrow-kt:arrow-stack:$arrow_version"))
     }
