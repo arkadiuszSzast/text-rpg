@@ -15,6 +15,7 @@ class RecordingMailSender(
     }
 
     fun getAll() = sentMails.toMap()
+    fun mailNotSent(mailId: Id<Mail>) = sentMails[mailId] == null
     fun hasBeenSentSuccessfully(mailId: Id<Mail>) = sentMails[mailId] == MailSentResult.Success(mailId)
     fun hasNotBeenSentSuccessfully(mailId: Id<Mail>) = sentMails[mailId] is MailSentResult.Error
     fun clear() = sentMails.clear()

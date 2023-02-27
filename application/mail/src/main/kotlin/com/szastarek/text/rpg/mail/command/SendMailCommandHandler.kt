@@ -27,7 +27,7 @@ internal class SendMailCommandHandler(
         val (subject, from, to, templateId, variables, metadata) = command
         val mail = MailAggregate(newId(), subject, from, to, templateId, variables)
         acl.hasAccessTo(sendingMailsFeature).onDenied {
-            handleNoPermissions(mail, metadata)
+            return handleNoPermissions(mail, metadata)
         }
 
         return when (val event = mail.send(mailSender)) {

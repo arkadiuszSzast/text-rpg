@@ -4,10 +4,12 @@ import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 import org.litote.kmongo.Id
 
-sealed class MailSentResult {
-    @Serializable
-    data class Success(@Contextual val mailId: Id<Mail>) : MailSentResult()
+sealed interface MailSentResult {
+    val mailId: Id<Mail>
 
     @Serializable
-    data class Error(@Contextual val mailId: Id<Mail>, val cause: MailSendingError) : MailSentResult()
+    data class Success(@Contextual override val mailId: Id<Mail>) : MailSentResult
+
+    @Serializable
+    data class Error(@Contextual override val mailId: Id<Mail>, val cause: MailSendingError) : MailSentResult
 }
