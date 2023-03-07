@@ -17,7 +17,6 @@ val auth0_jwt_version: String by project
 val event_store_db_version: String by project
 val kediatr_version: String by project
 val mongock_version: String by project
-val awaitility_version: String by project
 
 plugins {
     kotlin("jvm") version "1.8.0"
@@ -31,6 +30,12 @@ allprojects {
         mavenCentral()
         maven { url = uri("https://jitpack.io") }
         maven("https://maven.pkg.github.com/arkadiuszSzast/kotlin-acl-kotlinx-serializer") {
+            credentials {
+                username = System.getenv("GITHUB_ACTOR")
+                password = System.getenv("GITHUB_TOKEN")
+            }
+        }
+        maven("https://maven.pkg.github.com/arkadiuszSzast/ktor-event-store-db") {
             credentials {
                 username = System.getenv("GITHUB_ACTOR")
                 password = System.getenv("GITHUB_TOKEN")
@@ -66,7 +71,7 @@ subprojects {
         implementation("org.mindrot:jbcrypt:$jbcrypt_version")
         implementation("io.ktor:ktor-server-status-pages:$ktor_version")
         implementation("com.auth0:java-jwt:$auth0_jwt_version")
-        implementation("com.github.arkadiuszSzast:ktor-event-store-db:$event_store_db_version")
+        implementation("com.szastarek:kotlin-event-store-db:$event_store_db_version")
         implementation("com.github.arkadiuszSzast:kediatR-koin-starter:$kediatr_version")
         implementation("org.litote.kmongo:kmongo-coroutine-serialization:$kmongo_version")
         implementation("org.litote.kmongo:kmongo-id-serialization:$kmongo_version")
@@ -79,10 +84,13 @@ subprojects {
         testImplementation("io.strikt:strikt-core:$strikt_version")
         testImplementation("io.strikt:strikt-arrow:$strikt_version")
         testImplementation("io.insert-koin:koin-test:$koin_version")
-        testImplementation("org.awaitility:awaitility-kotlin:$awaitility_version")
         testImplementation(testFixtures("com.szastarek:kotlin-acl-kotlinx-serialization:${kotlin_acl_version}"))
 
         implementation(platform("io.arrow-kt:arrow-stack:$arrow_version"))
+    }
+
+    tasks.withType<Test>().configureEach {
+        useJUnitPlatform()
     }
 
     kotlin.target.compilations["test"].associateWith(kotlin.target.compilations["main"])

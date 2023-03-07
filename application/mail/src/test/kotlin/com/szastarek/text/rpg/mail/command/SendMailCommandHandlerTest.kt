@@ -2,10 +2,8 @@ package com.szastarek.text.rpg.mail.command
 
 import com.szastarek.acl.CanDoAnythingAuthorizedAccountAbilityProvider
 import com.szastarek.acl.DenyAllAuthorizedAccountAbilityProvider
-import com.szastarek.acl.authority.AuthorizedAccountAbilityProvider
-import com.szastarek.text.rpg.event.store.EventStoreTest
+import com.szastarek.event.store.db.InMemoryEventStoreDB
 import com.szastarek.text.rpg.event.store.getAs
-import com.szastarek.text.rpg.mail.MailSender
 import com.szastarek.text.rpg.mail.MailSendingError
 import com.szastarek.text.rpg.mail.MailSentResult
 import com.szastarek.text.rpg.mail.RecordingMailSender
@@ -14,10 +12,7 @@ import com.szastarek.text.rpg.mail.event.MailSentSuccessfullyEvent
 import com.szastarek.text.rpg.mail.mailModule
 import com.szastarek.text.rpg.shared.EmailAddress
 import com.szastarek.text.rpg.test.utils.faker
-import org.koin.core.qualifier.named
-import org.koin.dsl.bind
-import org.koin.dsl.module
-import org.koin.test.inject
+import io.kotest.core.spec.style.DescribeSpec
 import strikt.api.expectThat
 import strikt.arrow.isRight
 import strikt.assertions.hasSize
@@ -25,30 +20,26 @@ import strikt.assertions.isA
 import strikt.assertions.isEqualTo
 import strikt.assertions.isTrue
 
-private val testingModules = module {
-    single {
-        RecordingMailSender {
-            when (it.to) {
-                EmailAddress.create("invalid@mail.com") ->
-                    MailSentResult.Error(it.id.cast(), MailSendingError("Invalid mail address"))
+class SendMailCommandHandlerTest : DescribeSpec() {
 
-                else -> MailSentResult.Success(it.id.cast())
-            }
+    private val eventStoreDb = InMemoryEventStoreDB()
+    private val mailSender = RecordingMailSender {
+        when (it.to) {
+            EmailAddress.create("invalid@mail.com") ->
+                MailSentResult.Error(it.id.cast(), MailSendingError("Invalid mail address"))
+
+            else -> MailSentResult.Success(it.id.cast())
         }
-    } bind MailSender::class
-    single<AuthorizedAccountAbilityProvider>(named("canDoAnythingAbilityProvider")) { CanDoAnythingAuthorizedAccountAbilityProvider() }
-    single<AuthorizedAccountAbilityProvider>(named("denyAllAbilityProvider")) { DenyAllAuthorizedAccountAbilityProvider() }
-    single(named("allowAllSendMailCommandHandler")) { SendMailCommandHandler(get(), get(), get(named("canDoAnythingAbilityProvider"))) }
-    single(named("denyAllSendMailCommandHandler")) { SendMailCommandHandler(get(), get(), get(named("denyAllAbilityProvider"))) }
-}
-
-class SendMailCommandHandlerTest : EventStoreTest(testingModules) {
+    }
+    private val allowAllSendMailHandler = SendMailCommandHandler(mailSender, eventStoreDb, CanDoAnythingAuthorizedAccountAbilityProvider())
+    private val denyAllSendMailHandler = SendMailCommandHandler(mailSender, eventStoreDb, DenyAllAuthorizedAccountAbilityProvider())
 
     init {
 
-        val allowAllSendMailHandler by inject<SendMailCommandHandler>(named("allowAllSendMailCommandHandler"))
-        val denyAllSendMailHandler by inject<SendMailCommandHandler>(named("denyAllSendMailCommandHandler"))
-        val mailSender by inject<RecordingMailSender>()
+        beforeEach {
+            eventStoreDb.clear()
+            mailSender.clear()
+        }
 
         describe("SendMailCommandHandler") {
 
