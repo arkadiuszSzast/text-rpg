@@ -44,13 +44,13 @@ class SendMailCommandHandlerTest : DescribeSpec() {
         describe("SendMailCommandHandler") {
 
             it("should send mail") {
-                //given
+                //arrange
                 val command = faker.mailModule.sendMailCommand()
 
-                //when
+                //act
                 val result = allowAllSendMailHandler.handleAsync(command)
 
-                //then
+                //assert
                 expectThat(result).isA<MailSentResult.Success>()
                 expectThat(mailSender.hasBeenSentSuccessfully(result.mailId)).isTrue()
 
@@ -64,13 +64,13 @@ class SendMailCommandHandlerTest : DescribeSpec() {
             }
 
             it("when sending failed should save MailSendingErrorEvent") {
-                //given
+                //arrange
                 val command = faker.mailModule.sendMailCommand(to = EmailAddress.create("invalid@mail.com"))
 
-                //when
+                //act
                 val result = allowAllSendMailHandler.handleAsync(command)
 
-                //then
+                //assert
                 expectThat(result).isA<MailSentResult.Error>()
                 expectThat(mailSender.hasNotBeenSentSuccessfully(result.mailId)).isTrue()
 
@@ -84,13 +84,13 @@ class SendMailCommandHandlerTest : DescribeSpec() {
             }
 
             it("should save MailSendingErrorEvent when have no permissions") {
-                //given
+                //arrange
                 val command = faker.mailModule.sendMailCommand()
 
-                //when
+                //act
                 val result = denyAllSendMailHandler.handleAsync(command)
 
-                //then
+                //assert
                 expectThat(result).isA<MailSentResult.Error>()
                 expectThat(mailSender.mailNotSent(result.mailId)).isTrue()
 

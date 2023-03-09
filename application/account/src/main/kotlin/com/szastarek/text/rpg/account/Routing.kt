@@ -1,5 +1,7 @@
 package com.szastarek.text.rpg.account
 
+import com.szastarek.text.rpg.account.activation.command.ActivateAccountCommand
+import com.szastarek.text.rpg.account.activation.request.ActivateAccountRequest
 import com.szastarek.text.rpg.account.command.CreateAccountCommand
 import com.szastarek.text.rpg.account.command.LoginAccountCommand
 import com.szastarek.text.rpg.account.command.LoginAccountCommandSucceed
@@ -44,6 +46,13 @@ fun Application.configureAccountRouting() {
                 is LoginAccountCommandSucceed -> call.respond(HttpStatusCode.OK, LoginAccountResponse(result.token))
                 else -> call.respond(HttpStatusCode.Unauthorized)
             }
+        }
+
+        post("${AccountApi.v1}/activate") {
+            val request = call.receive<ActivateAccountRequest>().validateEagerly()
+
+            commandBus.executeCommandAsync(ActivateAccountCommand(request.token))
+            call.respond(HttpStatusCode.OK)
         }
     }
 }

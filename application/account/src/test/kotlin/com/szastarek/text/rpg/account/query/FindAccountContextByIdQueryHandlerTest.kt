@@ -45,13 +45,13 @@ class FindAccountContextByIdQueryHandlerTest : DescribeSpec() {
             }
 
             it("should return empty if account not found") {
-                //given
+                //arrange
                 val query = FindAccountContextByIdQuery(newId())
 
-                //when
+                //act
                 val result = handler.handleAsync(query)
 
-                //then
+                //assert
                 expectThat(result).isNone()
             }
         }

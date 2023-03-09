@@ -45,7 +45,7 @@ data class AccountLoggedInSuccessEvent(
 data class AccountLoggedInFailureEvent(
     @Contextual val accountId: Id<Account>,
     @Serializable(with = LogInFailureError.CodifiedSerializer::class)
-    val error: CodifiedEnum<LogInFailureError, String>,
+    val reason: CodifiedEnum<LogInFailureError, String>,
     val attemptDate: Instant = Clock.System.now()
 ) : AccountLoggedInEvent() {
     @Serializable(with = UUIDSerializer::class)

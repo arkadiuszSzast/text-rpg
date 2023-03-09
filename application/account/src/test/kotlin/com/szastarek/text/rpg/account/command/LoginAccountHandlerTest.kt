@@ -1,6 +1,7 @@
 package com.szastarek.text.rpg.account.command
 
 import com.szastarek.event.store.db.InMemoryEventStoreDB
+import com.szastarek.text.rpg.account.AccountStatus
 import com.szastarek.text.rpg.account.InMemoryAccountAggregateRepository
 import com.szastarek.text.rpg.account.LogInFailureError
 import com.szastarek.text.rpg.account.accountModule
@@ -37,8 +38,10 @@ class LoginAccountHandlerTest : DescribeSpec() {
             it("should login account") {
                 //arrange
                 val rawPassword = faker.accountModule.rawPassword()
-                val account = faker.accountModule.accountAggregate { password = rawPassword.hashpw() }
-                    .also { accountAggregateRepository.save(it) }
+                val account = faker.accountModule.accountAggregate {
+                    status = AccountStatus.Active
+                    password = rawPassword.hashpw()
+                }.also { accountAggregateRepository.save(it) }
                 val command = LoginAccountCommand(account.emailAddress, rawPassword)
 
                 //act
@@ -81,7 +84,63 @@ class LoginAccountHandlerTest : DescribeSpec() {
                     .isRight()
                     .get { value }
                     .and { get { accountId }.isEqualTo(account.id) }
-                    .and { get { error.code() }.isEqualTo(LogInFailureError.InvalidPassword.code) }
+                    .and { get { reason.code() }.isEqualTo(LogInFailureError.InvalidPassword.code) }
+            }
+        }
+
+        it("should not login account when account is suspended") {
+            //arrange
+            val rawPassword = faker.accountModule.rawPassword()
+            val account = faker.accountModule.accountAggregate {
+                status = AccountStatus.Suspended
+                password = rawPassword.hashpw()
+            }.also { accountAggregateRepository.save(it) }
+            val command = LoginAccountCommand(account.emailAddress, rawPassword)
+
+            //act
+            val result = handler.handleAsync(command)
+
+            //assert
+            expectThat(result) {
+                isA<LoginAccountCommandFailure>()
+                    .and { get { email }.isEqualTo(account.emailAddress) }
+                    .and { get { errorCode.code() }.isEqualTo(LogInFailureError.AccountSuspended.code) }
+            }
+            expectThat(eventStoreDb.readAllByEventType(AccountLoggedInFailureEvent.eventType).events) {
+                hasSize(1)
+                first().get { event.getAs<AccountLoggedInFailureEvent>() }
+                    .isRight()
+                    .get { value }
+                    .and { get { accountId }.isEqualTo(account.id) }
+                    .and { get { reason.code() }.isEqualTo(LogInFailureError.AccountSuspended.code) }
+            }
+        }
+
+        it("should not login account when account is inactive") {
+            //arrange
+            val rawPassword = faker.accountModule.rawPassword()
+            val account = faker.accountModule.accountAggregate {
+                status = AccountStatus.Staged
+                password = rawPassword.hashpw()
+            }.also { accountAggregateRepository.save(it) }
+            val command = LoginAccountCommand(account.emailAddress, rawPassword)
+
+            //act
+            val result = handler.handleAsync(command)
+
+            //assert
+            expectThat(result) {
+                isA<LoginAccountCommandFailure>()
+                    .and { get { email }.isEqualTo(account.emailAddress) }
+                    .and { get { errorCode.code() }.isEqualTo(LogInFailureError.AccountNotActivated.code) }
+            }
+            expectThat(eventStoreDb.readAllByEventType(AccountLoggedInFailureEvent.eventType).events) {
+                hasSize(1)
+                first().get { event.getAs<AccountLoggedInFailureEvent>() }
+                    .isRight()
+                    .get { value }
+                    .and { get { accountId }.isEqualTo(account.id) }
+                    .and { get { reason.code() }.isEqualTo(LogInFailureError.AccountNotActivated.code) }
             }
         }
 

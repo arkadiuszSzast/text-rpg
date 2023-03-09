@@ -12,6 +12,7 @@ internal class ApplicationConfigTest : DescribeSpec({
             // arrange && act && assert
             expectThat(ApplicationConfig) {
                 get { environment }.isEqualTo("dev")
+                get { webClientAppUrl }.isEqualTo("http://localhost:3000/")
             }
         }
     }

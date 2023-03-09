@@ -19,14 +19,16 @@ internal class AccountAggregateUpdater(private val accountAggregateRepository: A
     }
 
     private suspend fun applyAccountCreatedEvent(event: Either<Throwable, AccountCreatedEvent>) {
-        event.map {
-            accountAggregateRepository.save(AccountAggregate.apply(it))
-                .tap { log.debug("Stream group: account-projection-updater applied account-created event for aggregate $it") }
-        }.tapLeft {
-            log.error("Stream group: account-projection-updater failed to apply account-created event for aggregate $it")
-            throw it
+        when(event) {
+            is Either.Right -> {
+                accountAggregateRepository.save(AccountAggregate.apply(event.value))
+                log.debug("Stream group: account-projection-updater applied account-created event for aggregate ${event.value.aggregateId}")
+            }
+            is Either.Left -> {
+                log.error("Stream group: account-projection-updater failed to apply account-created event for aggregate. Error: ${event.value}")
+                throw event.value
+            }
         }
-
     }
 
 }

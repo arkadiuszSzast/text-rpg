@@ -20,7 +20,7 @@ import pl.brightinventions.codified.enums.codifiedEnum
 
 @JvmInline
 @Serializable
-value class JwtToken private constructor(val token: String) : Validatable<JwtToken> {
+value class JwtToken private constructor(val value: String) : Validatable<JwtToken> {
     companion object {
         fun create(token: String): Validated<JWTDecodeException, JwtToken> {
             return try {
@@ -37,13 +37,13 @@ value class JwtToken private constructor(val token: String) : Validatable<JwtTok
             }
 
         val validator = Validation {
-            JwtToken::token {
+            JwtToken::value {
                 isValidJwt() hint "validation.invalid_jwt_token"
             }
         }
     }
 
-    fun verify(algorithm: Algorithm) = Validated.catch { JWT.require(algorithm).build().verify(token) }
+    fun verify(algorithm: Algorithm) = Validated.catch { JWT.require(algorithm).build().verify(value) }
         .mapLeft {
             when (it) {
                 is AlgorithmMismatchException -> JwtValidationError.AlgorithmMismatch.codifiedEnum()
@@ -53,6 +53,8 @@ value class JwtToken private constructor(val token: String) : Validatable<JwtTok
                 else -> "unhandled_token_error".codifiedEnum()
             }
         }
+
+    fun getSubjectUnsafe(): String? = JWT.decode(value).subject
 
     override val validator: Validation<JwtToken>
         get() = Companion.validator

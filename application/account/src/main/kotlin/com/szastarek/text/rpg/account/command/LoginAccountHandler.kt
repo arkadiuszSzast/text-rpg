@@ -35,9 +35,9 @@ internal class LoginAccountHandler(
             .map { account->
                 when (val event = account.logIn(password)) {
                     is AccountLoggedInFailureEvent -> {
-                        logger.warn { "Authenticating $email failed. Error code: ${event.error}" }
+                        logger.warn { "Authenticating $email failed. Error code: ${event.reason}" }
                         eventStore.appendToStream(event, command.metadata)
-                        LoginAccountCommandFailure(email, event.error)
+                        LoginAccountCommandFailure(email, event.reason)
                     }
                     is AccountLoggedInSuccessEvent -> {
                         logger.debug { "Authenticating $email succeeded" }

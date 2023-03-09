@@ -26,12 +26,12 @@ services:
       - "2113:2113"
     volumes:
       - type: volume
-        source: eventstore-db-text-rpg-volume-data
+        source: eventstore1-db-text-rpg-volume-data
         target: /var/lib/eventstore
       - type: volume
-        source: eventstore-db-text-rpg-volume-logs
+        source: eventstore1-db-text-rpg-volume-logs
         target: /var/log/eventstore
 
 volumes:
-  eventstore-db-text-rpg-volume-data:
-  eventstore-db-text-rpg-volume-logs:
+  eventstore1-db-text-rpg-volume-data:
+  eventstore1-db-text-rpg-volume-logs:

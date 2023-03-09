@@ -6,6 +6,7 @@ fun AccountAggregate.Companion.apply(event: AccountCreatedEvent): AccountAggrega
     return AccountAggregate(
         event.accountId,
         event.emailAddress,
+        event.status,
         event.roleName,
         event.customAuthorities,
         event.hashedPassword,

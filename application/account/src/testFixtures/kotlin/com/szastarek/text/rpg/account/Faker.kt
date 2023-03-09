@@ -37,5 +37,9 @@ class AccountModule(private val faker: Faker) {
 
     fun createAccountCommand() = CreateAccountCommand(emailAddress(), rawPassword(), timeZone())
 
-    fun accountAggregate(customize: AccountAggregateBuilder.() -> Unit = {}) = AccountAggregateBuilder().apply(customize).build()
+    fun accountAggregate(customize: AccountAggregateBuilder.() -> Unit = {}) =
+        AccountAggregateBuilder().apply(customize).build()
+
+    fun accountCreatedEvent(customize: AccountCreatedEventBuilder.() -> Unit = {}) =
+        AccountCreatedEventBuilder().apply(customize).build()
 }

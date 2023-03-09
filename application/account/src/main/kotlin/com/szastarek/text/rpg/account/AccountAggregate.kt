@@ -1,6 +1,10 @@
 package com.szastarek.text.rpg.account
 
 import com.szastarek.acl.authority.Authority
+import com.szastarek.text.rpg.account.activation.AccountActivationError
+import com.szastarek.text.rpg.account.activation.event.AccountActivatedEvent
+import com.szastarek.text.rpg.account.activation.event.AccountActivationEvent
+import com.szastarek.text.rpg.account.activation.event.AccountActivationFailureEvent
 import com.szastarek.text.rpg.account.event.AccountCreatedEvent
 import com.szastarek.text.rpg.account.event.AccountLoggedInEvent
 import com.szastarek.text.rpg.account.event.AccountLoggedInFailureEvent
@@ -18,12 +22,15 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import org.litote.kmongo.Id
 import org.litote.kmongo.newId
+import pl.brightinventions.codified.enums.CodifiedEnum
 import pl.brightinventions.codified.enums.codifiedEnum
 
 @Serializable
 data class AccountAggregate constructor(
     @SerialName("_id") @Contextual override val id: Id<Account>,
     override val emailAddress: EmailAddress,
+    @Serializable(with = AccountStatus.CodifiedSerializer::class)
+    val status: CodifiedEnum<AccountStatus, String>,
     val roleName: RoleName,
     val customAuthorities: List<Authority>,
     val password: HashedPassword,
@@ -40,6 +47,7 @@ data class AccountAggregate constructor(
             return AccountCreatedEvent(
                 newId(),
                 emailAddress,
+                AccountStatus.Staged.codifiedEnum(),
                 password,
                 RoleNames.regularUser,
                 emptyList(),
@@ -53,8 +61,21 @@ data class AccountAggregate constructor(
         if (!password.matches(logInRequestPassword)) {
             return AccountLoggedInFailureEvent(id, LogInFailureError.InvalidPassword.codifiedEnum())
         }
+        return when(status) {
+            AccountStatus.Staged.codifiedEnum() -> AccountLoggedInFailureEvent(id, LogInFailureError.AccountNotActivated.codifiedEnum())
+            AccountStatus.Suspended .codifiedEnum() -> AccountLoggedInFailureEvent(id, LogInFailureError.AccountSuspended.codifiedEnum())
+            AccountStatus.Active.codifiedEnum() -> AccountLoggedInSuccessEvent(id)
+            else -> AccountLoggedInFailureEvent(id, LogInFailureError.AccountInUnknownStatus.codifiedEnum())
+        }
+    }
 
-        return AccountLoggedInSuccessEvent(id)
+    fun activate(): AccountActivationEvent {
+        return when(status.knownOrNull()) {
+            AccountStatus.Staged -> AccountActivatedEvent(id)
+            AccountStatus.Active -> AccountActivationFailureEvent(id, AccountActivationError.AccountActive.codifiedEnum())
+            AccountStatus.Suspended -> AccountActivationFailureEvent(id, AccountActivationError.AccountSuspended.codifiedEnum())
+            else -> AccountActivationFailureEvent(id, AccountActivationError.AccountStatusUnknown.codifiedEnum())
+        }
     }
 }
 
