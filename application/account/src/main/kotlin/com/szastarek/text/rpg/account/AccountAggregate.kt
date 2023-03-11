@@ -77,5 +77,10 @@ data class AccountAggregate constructor(
             else -> AccountActivationFailureEvent(id, AccountActivationError.AccountStatusUnknown.codifiedEnum())
         }
     }
+
+    fun apply(event: AccountActivatedEvent): AccountAggregate {
+        require(event.accountId == id) { "Event $event is not applicable to account $this" }
+        return copy(status = AccountStatus.Active.codifiedEnum())
+    }
 }
 

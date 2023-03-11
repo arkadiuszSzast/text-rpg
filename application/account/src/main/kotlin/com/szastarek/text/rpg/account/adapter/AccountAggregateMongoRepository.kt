@@ -31,4 +31,10 @@ internal class AccountAggregateMongoRepository(
             .mapNotNull { it.insertedId }
             .map { it.asObjectId().value.toId() }
     }
+
+    override suspend fun updateById(id: Id<Account>, value: AccountAggregate): Option<Id<Account>> {
+        return collection.updateOneById(id, value).toOption()
+            .mapNotNull { it.upsertedId }
+            .map { it.asObjectId().value.toId() }
+    }
 }

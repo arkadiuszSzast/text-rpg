@@ -9,4 +9,5 @@ interface AccountAggregateRepository {
     suspend fun existsByEmail(email: EmailAddress): Boolean
     suspend fun findByEmail(email: EmailAddress): Option<AccountAggregate>
     suspend fun save(accountAggregate: AccountAggregate): Option<Id<Account>>
+    suspend fun updateById(id: Id<Account>, value: AccountAggregate): Option<Id<Account>>
 }

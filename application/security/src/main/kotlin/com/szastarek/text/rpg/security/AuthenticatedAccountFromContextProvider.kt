@@ -6,13 +6,14 @@ import com.szastarek.acl.AuthenticatedAccountProvider
 import com.szastarek.acl.InjectedAuthorityContext
 import com.szastarek.acl.RegularRole
 import com.szastarek.acl.SuperUserRole
+import com.szastarek.acl.UnauthenticatedPrincipalRole
 import com.szastarek.acl.authority.Authority
 import kotlin.coroutines.coroutineContext
 
-class AuthenticatedAccountFromContextProvider : AuthenticatedAccountProvider{
+class AuthenticatedAccountFromContextProvider : AuthenticatedAccountProvider {
     override suspend fun currentPrincipal(): AccountContext {
         val authenticatedAccountContext = coroutineContext[AuthenticatedAccountContext]
-        return authenticatedAccountContext?.accountContext ?: throw NotAuthenticatedException()
+        return authenticatedAccountContext?.accountContext ?: UnauthenticatedPrincipalAccountContext
     }
 
     override suspend fun getCustomAuthorities(): List<Authority> {
@@ -23,6 +24,7 @@ class AuthenticatedAccountFromContextProvider : AuthenticatedAccountProvider{
     override suspend fun getRoleAuthorities(): List<Authority> {
         return when(val currentPrincipalRole = currentPrincipal().role) {
             is SuperUserRole -> emptyList()
+            is UnauthenticatedPrincipalRole -> emptyList()
             is RegularRole -> currentPrincipalRole.authorities
         }
     }

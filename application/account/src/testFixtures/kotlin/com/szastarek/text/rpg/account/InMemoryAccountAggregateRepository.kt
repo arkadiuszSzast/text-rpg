@@ -28,4 +28,9 @@ class InMemoryAccountAggregateRepository : AccountAggregateRepository {
         db[accountAggregate.id] = accountAggregate
         return accountAggregate.id.toOption()
     }
+
+    override suspend fun updateById(id: Id<Account>, value: AccountAggregate): Option<Id<Account>> {
+        return db.replace(id, value).toOption()
+            .mapNotNull { it.id }
+    }
 }
