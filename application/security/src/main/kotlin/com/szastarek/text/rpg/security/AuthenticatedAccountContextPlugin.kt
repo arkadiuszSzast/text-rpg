@@ -6,7 +6,7 @@ import com.szastarek.text.rpg.account.Account
 import com.szastarek.text.rpg.account.query.FindAccountContextByIdQuery
 import com.szastarek.text.rpg.shared.exception.resourceNotFoundException
 import com.szastarek.text.rpg.shared.koin.getKoinInstance
-import com.trendyol.kediatr.CommandBus
+import com.trendyol.kediatr.Mediator
 import io.ktor.server.application.ApplicationCallPipeline
 import io.ktor.server.application.BaseRouteScopedPlugin
 import io.ktor.server.application.call
@@ -25,7 +25,7 @@ class AuthenticatedAccountContextPlugin {
     companion object Feature : BaseRouteScopedPlugin<Configuration, AuthenticatedAccountContextPlugin> {
         override val key = AttributeKey<AuthenticatedAccountContextPlugin>("AuthenticatedAccountContextPlugin")
         private var config = Configuration()
-        private val commandBus = getKoinInstance<CommandBus>()
+        private val mediator = getKoinInstance<Mediator>()
 
         override fun install(
             pipeline: ApplicationCallPipeline,
@@ -41,7 +41,7 @@ class AuthenticatedAccountContextPlugin {
                 when (val principal = call.principal<Principal>()) {
                     is JWTPrincipal -> {
                         val accountId = WrappedObjectId<Account>(principal.accountId.value)
-                        val accountContext = commandBus.executeQueryAsync(FindAccountContextByIdQuery(accountId))
+                        val accountContext = mediator.send(FindAccountContextByIdQuery(accountId))
                             .getOrElse { throw resourceNotFoundException(accountId) }
 
                         withContext(coroutineContext + AuthenticatedAccountContext(accountContext)) {

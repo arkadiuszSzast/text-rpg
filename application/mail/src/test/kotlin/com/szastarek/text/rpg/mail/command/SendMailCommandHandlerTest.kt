@@ -48,7 +48,7 @@ class SendMailCommandHandlerTest : DescribeSpec() {
                 val command = faker.mailModule.sendMailCommand()
 
                 //act
-                val result = allowAllSendMailHandler.handleAsync(command)
+                val result = allowAllSendMailHandler.handle(command)
 
                 //assert
                 expectThat(result).isA<MailSentResult.Success>()
@@ -68,7 +68,7 @@ class SendMailCommandHandlerTest : DescribeSpec() {
                 val command = faker.mailModule.sendMailCommand(to = EmailAddress.create("invalid@mail.com"))
 
                 //act
-                val result = allowAllSendMailHandler.handleAsync(command)
+                val result = allowAllSendMailHandler.handle(command)
 
                 //assert
                 expectThat(result).isA<MailSentResult.Error>()
@@ -88,7 +88,7 @@ class SendMailCommandHandlerTest : DescribeSpec() {
                 val command = faker.mailModule.sendMailCommand()
 
                 //act
-                val result = denyAllSendMailHandler.handleAsync(command)
+                val result = denyAllSendMailHandler.handle(command)
 
                 //assert
                 expectThat(result).isA<MailSentResult.Error>()

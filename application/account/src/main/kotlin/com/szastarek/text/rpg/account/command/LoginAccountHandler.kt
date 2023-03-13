@@ -14,7 +14,7 @@ import com.szastarek.text.rpg.security.RoleName
 import com.szastarek.text.rpg.security.config.JwtAuthConfig
 import com.szastarek.text.rpg.shared.EmailAddress
 import com.szastarek.text.rpg.shared.jwt.JwtToken
-import com.trendyol.kediatr.AsyncCommandWithResultHandler
+import com.trendyol.kediatr.CommandWithResultHandler
 import mu.KotlinLogging
 import org.litote.kmongo.Id
 import pl.brightinventions.codified.enums.codifiedEnum
@@ -24,10 +24,10 @@ internal class LoginAccountHandler(
     private val jwtConfig: JwtAuthConfig,
     private val accountAggregateRepository: AccountAggregateRepository,
     private val eventStore: EventStoreDB,
-) : AsyncCommandWithResultHandler<LoginAccountCommand, LoginAccountCommandResult> {
+) : CommandWithResultHandler<LoginAccountCommand, LoginAccountCommandResult> {
     private val logger = KotlinLogging.logger {}
 
-    override suspend fun handleAsync(command: LoginAccountCommand): LoginAccountCommandResult {
+    override suspend fun handle(command: LoginAccountCommand): LoginAccountCommandResult {
         val (email, password) = command
         logger.debug { "Starting authentication process for user: [$email]" }
 

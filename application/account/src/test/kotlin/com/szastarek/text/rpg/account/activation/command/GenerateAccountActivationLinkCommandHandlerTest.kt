@@ -28,7 +28,7 @@ class GenerateAccountActivationLinkCommandHandlerTest : DescribeSpec() {
                 val command = GenerateAccountActivationLinkCommand(newId())
 
                 //act
-                val result = allowingHandler.handleAsync(command)
+                val result = allowingHandler.handle(command)
 
                 //assert
                 expectThat(result) {
@@ -46,7 +46,7 @@ class GenerateAccountActivationLinkCommandHandlerTest : DescribeSpec() {
 
                 //act && assert
                 expectThrows<AuthorityCheckException> {
-                    denyingHandler.handleAsync(command)
+                    denyingHandler.handle(command)
                 }
             }
         }

@@ -45,7 +45,7 @@ class LoginAccountHandlerTest : DescribeSpec() {
                 val command = LoginAccountCommand(account.emailAddress, rawPassword)
 
                 //act
-                val result = handler.handleAsync(command)
+                val result = handler.handle(command)
 
                 //assert
                 expectThat(result) {
@@ -70,7 +70,7 @@ class LoginAccountHandlerTest : DescribeSpec() {
             val command = LoginAccountCommand(account.emailAddress, RawPassword("invalid password"))
 
             //act
-            val result = handler.handleAsync(command)
+            val result = handler.handle(command)
 
             //assert
             expectThat(result) {
@@ -98,7 +98,7 @@ class LoginAccountHandlerTest : DescribeSpec() {
             val command = LoginAccountCommand(account.emailAddress, rawPassword)
 
             //act
-            val result = handler.handleAsync(command)
+            val result = handler.handle(command)
 
             //assert
             expectThat(result) {
@@ -126,7 +126,7 @@ class LoginAccountHandlerTest : DescribeSpec() {
             val command = LoginAccountCommand(account.emailAddress, rawPassword)
 
             //act
-            val result = handler.handleAsync(command)
+            val result = handler.handle(command)
 
             //assert
             expectThat(result) {
@@ -150,7 +150,7 @@ class LoginAccountHandlerTest : DescribeSpec() {
             val command = LoginAccountCommand(emailAddress, RawPassword("some_password"))
 
             //act
-            val result = handler.handleAsync(command)
+            val result = handler.handle(command)
 
             //assert
             expectThat(result) {

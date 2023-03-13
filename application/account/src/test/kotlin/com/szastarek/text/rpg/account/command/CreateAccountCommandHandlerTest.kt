@@ -39,7 +39,7 @@ class CreateAccountCommandHandlerTest : DescribeSpec() {
                 val command = faker.accountModule.createAccountCommand()
 
                 //act
-                val result = handler.handleAsync(command)
+                val result = handler.handle(command)
 
                 //assert
                 expectThat(eventStoreDb.readAllByEventType(AccountCreatedEvent.eventType).events) {
@@ -65,7 +65,7 @@ class CreateAccountCommandHandlerTest : DescribeSpec() {
 
                 // act && assert
                 expectThrows<ValidationException> {
-                    handler.handleAsync(command)
+                    handler.handle(command)
                 }
                 expectThrows<StreamNotFoundException> {
                     eventStoreDb.readAllByEventType(AccountCreatedEvent.eventType)

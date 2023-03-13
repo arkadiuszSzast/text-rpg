@@ -6,16 +6,16 @@ import com.szastarek.text.rpg.account.AccountAggregateRepository
 import com.szastarek.text.rpg.event.store.appendToStream
 import com.szastarek.text.rpg.shared.validation.ValidationError
 import com.szastarek.text.rpg.shared.validation.ValidationException
-import com.trendyol.kediatr.AsyncCommandWithResultHandler
+import com.trendyol.kediatr.CommandWithResultHandler
 import mu.KotlinLogging
 
 internal class CreateAccountCommandHandler(
     private val accountAggregateRepository: AccountAggregateRepository,
     private val eventStore: EventStoreDB,
-    ) : AsyncCommandWithResultHandler<CreateAccountCommand, CreateAccountCommandResult> {
+    ) : CommandWithResultHandler<CreateAccountCommand, CreateAccountCommandResult> {
     private val logger = KotlinLogging.logger {}
 
-    override suspend fun handleAsync(command: CreateAccountCommand): CreateAccountCommandResult {
+    override suspend fun handle(command: CreateAccountCommand): CreateAccountCommandResult {
         logger.debug { "Starting creating account" }
         val (emailAddress, password, timeZone, metadata) = command
         val isEmailTaken = accountAggregateRepository.existsByEmail(emailAddress)

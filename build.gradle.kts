@@ -41,6 +41,12 @@ allprojects {
                 password = System.getenv("GITHUB_TOKEN")
             }
         }
+        maven("https://maven.pkg.github.com/arkadiuszSzast/kediatR") {
+            credentials {
+                username = System.getenv("GITHUB_ACTOR")
+                password = System.getenv("GITHUB_TOKEN")
+            }
+        }
     }
 
     apply(plugin = "kotlin")
@@ -72,7 +78,8 @@ subprojects {
         implementation("org.mindrot:jbcrypt:$jbcrypt_version")
         implementation("com.auth0:java-jwt:$auth0_jwt_version")
         implementation("com.szastarek:kotlin-event-store-db:$event_store_db_version")
-        implementation("com.github.arkadiuszSzast:kediatR-koin-starter:$kediatr_version")
+        implementation("com.szastarek:kediatr-core:$kediatr_version")
+        implementation("com.szastarek:kediatr-koin-starter:$kediatr_version")
         implementation("org.litote.kmongo:kmongo-coroutine-serialization:$kmongo_version")
         implementation("org.litote.kmongo:kmongo-id-serialization:$kmongo_version")
         implementation("io.mongock:mongock-standalone:$mongock_version")

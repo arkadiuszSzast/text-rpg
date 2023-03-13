@@ -8,7 +8,7 @@ import com.szastarek.text.rpg.account.config.JwtConfig
 import com.szastarek.text.rpg.security.generateAccountActivationLinkFeature
 import com.szastarek.text.rpg.shared.config.ApplicationConfig
 import com.szastarek.text.rpg.shared.jwt.JwtToken
-import com.trendyol.kediatr.AsyncCommandWithResultHandler
+import com.trendyol.kediatr.CommandWithResultHandler
 import io.ktor.http.URLBuilder
 import io.ktor.http.Url
 import io.ktor.http.appendPathSegments
@@ -20,10 +20,10 @@ internal class GenerateAccountActivationLinkCommandHandler(
     private val appConfig: ApplicationConfig,
     private val jwtConfig: JwtConfig,
     private val acl: AuthorizedAccountAbilityProvider
-) : AsyncCommandWithResultHandler<GenerateAccountActivationLinkCommand, GenerateAccountActivationLinkCommandResult> {
+) : CommandWithResultHandler<GenerateAccountActivationLinkCommand, GenerateAccountActivationLinkCommandResult> {
     private val logger = KotlinLogging.logger {}
 
-    override suspend fun handleAsync(command: GenerateAccountActivationLinkCommand): GenerateAccountActivationLinkCommandResult {
+    override suspend fun handle(command: GenerateAccountActivationLinkCommand): GenerateAccountActivationLinkCommandResult {
         acl.ensuring().ensureHasAccessTo(generateAccountActivationLinkFeature)
         val accountId = command.accountId
 

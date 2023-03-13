@@ -17,7 +17,7 @@ import com.szastarek.text.rpg.mail.MailSentResult
 import com.szastarek.text.rpg.mail.command.SendMailCommand
 import com.szastarek.text.rpg.security.generateAccountActivationLinkFeature
 import com.szastarek.text.rpg.security.sendingMailsFeature
-import com.trendyol.kediatr.CommandBus
+import com.trendyol.kediatr.Mediator
 import io.ktor.server.application.Application
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.async
@@ -30,7 +30,7 @@ private val neededAuthorities = listOf(
 
 internal fun Application.activationMailSenderSubscriber(
     eventStoreDb: EventStoreDB,
-    commandBus: CommandBus,
+    mediator: Mediator,
     mailConfig: MailConfig
 ) = async(SupervisorJob()) {
     val log = KotlinLogging.logger {}
@@ -46,14 +46,14 @@ internal fun Application.activationMailSenderSubscriber(
             .map { accountCreatedEvent ->
                 val activateAccountMailConfig = mailConfig.activateAccount
                 val sendingResult = withInjectedAuthorities(neededAuthorities) {
-                    val activationLink = commandBus.executeCommandAsync(
+                    val activationLink = mediator.send(
                         GenerateAccountActivationLinkCommand(
                             accountCreatedEvent.accountId,
                             eventMetadata?.toCommandMetadata()
                         )
                     ).url
                     val activateAccountMailVariables = ActivateAccountMailVariables(activationLink.toString())
-                    commandBus.executeCommandAsync(
+                    mediator.send(
                         SendMailCommand(
                             activateAccountMailConfig.subject,
                             activateAccountMailConfig.sender,

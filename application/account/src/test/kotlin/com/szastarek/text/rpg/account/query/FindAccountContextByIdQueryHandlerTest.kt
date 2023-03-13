@@ -35,7 +35,7 @@ class FindAccountContextByIdQueryHandlerTest : DescribeSpec() {
                 val query = FindAccountContextByIdQuery(account.id)
 
                 //act
-                val result = handler.handleAsync(query)
+                val result = handler.handle(query)
 
                 //assert
                 expectThat(result).isSome().get { value }
@@ -49,7 +49,7 @@ class FindAccountContextByIdQueryHandlerTest : DescribeSpec() {
                 val query = FindAccountContextByIdQuery(newId())
 
                 //act
-                val result = handler.handleAsync(query)
+                val result = handler.handle(query)
 
                 //assert
                 expectThat(result).isNone()

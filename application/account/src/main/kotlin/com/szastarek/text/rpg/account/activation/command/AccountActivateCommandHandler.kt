@@ -15,8 +15,8 @@ import com.szastarek.text.rpg.account.config.JwtConfig
 import com.szastarek.text.rpg.event.store.appendToStream
 import com.szastarek.text.rpg.shared.jwt.JwtValidationError
 import com.szastarek.text.rpg.shared.jwt.TokenMissingSubjectException
-import com.trendyol.kediatr.AsyncCommandWithResultHandler
 import com.trendyol.kediatr.CommandMetadata
+import com.trendyol.kediatr.CommandWithResultHandler
 import mu.KotlinLogging
 import org.bson.types.ObjectId
 import org.litote.kmongo.Id
@@ -27,10 +27,10 @@ internal class AccountActivateCommandHandler(
     private val jwtConfig: JwtConfig,
     private val eventStore: EventStoreDB,
     private val accountAggregateRepository: AccountAggregateRepository,
-) : AsyncCommandWithResultHandler<ActivateAccountCommand, ActivateAccountCommandResult> {
+) : CommandWithResultHandler<ActivateAccountCommand, ActivateAccountCommandResult> {
     private val logger = KotlinLogging.logger {}
 
-    override suspend fun handleAsync(command: ActivateAccountCommand): ActivateAccountCommandResult {
+    override suspend fun handle(command: ActivateAccountCommand): ActivateAccountCommandResult {
         val (token, metadata) = command
         val accountActivateTokenSecret = jwtConfig.activateAccount.secret
         val accountIdUnsafe = token.getSubjectUnsafe()?.let { ObjectId(it).toId<Account>() }

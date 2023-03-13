@@ -49,7 +49,7 @@ class AccountActivateCommandHandlerTest : DescribeSpec() {
 
                 // act && assert
                 expectThrows<TokenMissingSubjectException> {
-                    handler.handleAsync(command)
+                    handler.handle(command)
                 }
             }
 
@@ -60,7 +60,7 @@ class AccountActivateCommandHandlerTest : DescribeSpec() {
                 val command = ActivateAccountCommand(token)
 
                 // act
-                val result = handler.handleAsync(command)
+                val result = handler.handle(command)
 
                 // assert
                 val streamName = StreamName("${AccountActivationFailureEvent.eventCategory.value}-$accountId")
@@ -91,7 +91,7 @@ class AccountActivateCommandHandlerTest : DescribeSpec() {
                 val command = ActivateAccountCommand(token)
 
                 // act
-                val result = handler.handleAsync(command)
+                val result = handler.handle(command)
 
                 // assert
                 val streamName = StreamName("${AccountActivationFailureEvent.eventCategory.value}-$accountId")
@@ -122,7 +122,7 @@ class AccountActivateCommandHandlerTest : DescribeSpec() {
                 val command = ActivateAccountCommand(token)
 
                 // act
-                val result = handler.handleAsync(command)
+                val result = handler.handle(command)
 
                 // assert
                 val streamName = StreamName("${AccountActivationFailureEvent.eventCategory.value}-$accountId")
@@ -155,7 +155,7 @@ class AccountActivateCommandHandlerTest : DescribeSpec() {
                 val command = ActivateAccountCommand(token)
 
                 // act
-                val result = handler.handleAsync(command)
+                val result = handler.handle(command)
 
                 // assert
                 val streamName = StreamName("${AccountActivationFailureEvent.eventCategory.value}-$accountId")
@@ -188,7 +188,7 @@ class AccountActivateCommandHandlerTest : DescribeSpec() {
                 val command = ActivateAccountCommand(token)
 
                 // act
-                val result = handler.handleAsync(command)
+                val result = handler.handle(command)
 
                 // assert
                 val streamName = StreamName("${AccountActivationFailureEvent.eventCategory.value}-$accountId")
@@ -222,7 +222,7 @@ class AccountActivateCommandHandlerTest : DescribeSpec() {
                 val command = ActivateAccountCommand(token)
 
                 // act
-                val result = handler.handleAsync(command)
+                val result = handler.handle(command)
 
                 // assert
                 val streamName = StreamName("${AccountActivatedEvent.eventCategory.value}-$accountId")

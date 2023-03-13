@@ -11,8 +11,8 @@ import com.szastarek.text.rpg.mail.event.MailSendingErrorEvent
 import com.szastarek.text.rpg.mail.event.MailSentSuccessfullyEvent
 import com.szastarek.text.rpg.security.onDenied
 import com.szastarek.text.rpg.security.sendingMailsFeature
-import com.trendyol.kediatr.AsyncCommandWithResultHandler
 import com.trendyol.kediatr.CommandMetadata
+import com.trendyol.kediatr.CommandWithResultHandler
 import mu.KotlinLogging
 import org.litote.kmongo.newId
 
@@ -20,10 +20,10 @@ internal class SendMailCommandHandler(
     private val mailSender: MailSender,
     private val eventStore: EventStoreDB,
     private val acl: AuthorizedAccountAbilityProvider
-) : AsyncCommandWithResultHandler<SendMailCommand, MailSentResult> {
+) : CommandWithResultHandler<SendMailCommand, MailSentResult> {
     private val log = KotlinLogging.logger {}
 
-    override suspend fun handleAsync(command: SendMailCommand): MailSentResult {
+    override suspend fun handle(command: SendMailCommand): MailSentResult {
         val (subject, from, to, templateId, variables, metadata) = command
         val mail = MailAggregate(newId(), subject, from, to, templateId, variables)
         acl.hasAccessTo(sendingMailsFeature).onDenied {

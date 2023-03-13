@@ -19,7 +19,7 @@ import com.szastarek.text.rpg.mail.RecordingMailSender
 import com.szastarek.text.rpg.shared.EmailAddress
 import com.szastarek.text.rpg.shared.config.ApplicationConfig
 import com.szastarek.text.rpg.test.utils.faker
-import com.trendyol.kediatr.CommandBus
+import com.trendyol.kediatr.Mediator
 import io.ktor.server.testing.testApplication
 import kotlinx.coroutines.launch
 import org.koin.core.component.get
@@ -50,7 +50,7 @@ private val testingModules = module {
 }.plus(kediatrKoinModule)
 class ActivationMailSenderSubscriberKtTest : DatabaseAndEventStoreTest(testingModules) {
 
-   private val commandBus = get<CommandBus>()
+   private val mediator = get<Mediator>()
    private val mailSender = get<RecordingMailSender>()
 
    init {
@@ -60,7 +60,7 @@ class ActivationMailSenderSubscriberKtTest : DatabaseAndEventStoreTest(testingMo
          it("should send activation email") {
             testApplication {
                this.application {
-                  this.activationMailSenderSubscriber(eventStoreDb, commandBus, MailConfig)
+                  this.activationMailSenderSubscriber(eventStoreDb, mediator, MailConfig)
 
                   launch {
                      // arrange
@@ -93,7 +93,7 @@ class ActivationMailSenderSubscriberKtTest : DatabaseAndEventStoreTest(testingMo
          it("should not send activation email") {
             testApplication {
                this.application {
-                  this.activationMailSenderSubscriber(eventStoreDb, commandBus, MailConfig)
+                  this.activationMailSenderSubscriber(eventStoreDb, mediator, MailConfig)
 
                   launch {
                      // arrange
