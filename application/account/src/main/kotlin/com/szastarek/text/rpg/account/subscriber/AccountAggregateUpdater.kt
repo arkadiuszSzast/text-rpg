@@ -8,8 +8,8 @@ import com.szastarek.text.rpg.account.activation.event.AccountActivatedEvent
 import com.szastarek.text.rpg.account.apply
 import com.szastarek.text.rpg.account.event.AccountCreatedEvent
 import com.szastarek.text.rpg.event.store.getAs
-import com.szastarek.text.rpg.shared.OptionEmptyException
 import com.szastarek.text.rpg.shared.orThrow
+import com.szastarek.text.rpg.shared.resourceNotFoundException
 import mu.KotlinLogging
 
 internal class AccountAggregateUpdater(private val accountAggregateRepository: AccountAggregateRepository) {
@@ -26,7 +26,7 @@ internal class AccountAggregateUpdater(private val accountAggregateRepository: A
         event
             .map {
                 val account = accountAggregateRepository.findById(it.accountId)
-                    .orThrow { OptionEmptyException("Account with id: ${it.accountId} not found. AccountActivatedEvent won't be applied") }
+                    .orThrow { resourceNotFoundException(it.accountId) }
 
                 accountAggregateRepository.updateById(it.accountId, account.apply(it))
                     .map {

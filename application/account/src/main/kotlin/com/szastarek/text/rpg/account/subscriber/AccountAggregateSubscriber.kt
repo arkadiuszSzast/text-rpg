@@ -17,4 +17,4 @@ internal fun Application.accountAggregateUpdater(
     ) { _, event ->
         accountAggregateUpdater.update(event.event)
     }
-}
+}.start()

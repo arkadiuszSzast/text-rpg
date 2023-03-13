@@ -79,7 +79,7 @@ internal class AccountActivateCommandHandler(
             }
 
             is AccountActivationFailureEvent -> {
-                logger.debug { "Account[${event.accountId}] has not been activated because of $event.reason" }
+                logger.debug { "Account[${event.accountId}] has not been activated because of ${event.reason}" }
                 ActivateAccountCommandFailure(event.accountId, event.reason)
             }
         }

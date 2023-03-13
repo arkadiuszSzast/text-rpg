@@ -1,5 +1,6 @@
 package com.szastarek.text.rpg.account
 
+import com.szastarek.text.rpg.account.activation.event.AccountActivatedEvent
 import com.szastarek.text.rpg.account.command.CreateAccountCommand
 import com.szastarek.text.rpg.account.request.CreateAccountRequest
 import com.szastarek.text.rpg.security.RoleNames
@@ -11,6 +12,8 @@ import io.github.serpro69.kfaker.Faker
 import java.util.concurrent.TimeUnit
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
+import org.litote.kmongo.Id
+import org.litote.kmongo.newId
 
 val Faker.accountModule: AccountModule
     get() = AccountModule(this)
@@ -42,4 +45,6 @@ class AccountModule(private val faker: Faker) {
 
     fun accountCreatedEvent(customize: AccountCreatedEventBuilder.() -> Unit = {}) =
         AccountCreatedEventBuilder().apply(customize).build()
+
+    fun accountActivatedEvent(accountId: Id<Account> = newId()) = AccountActivatedEvent(accountId)
 }

@@ -81,4 +81,4 @@ internal fun Application.activationMailSenderSubscriber(
                 log.error { "Failed to deserialize event[${recordedEvent.eventId}] to AccountCreatedEvent. Event data: ${recordedEvent.eventData}" }
             }
     }
-}
+}.start()
